@@ -1,9 +1,13 @@
 #include "Board.h"
 #include <iostream>
 #include <vector>
+#include <cstdlib>
+#include <ctime>
 
 Board::Board(int r, int c) : rows(r), cols(c),
-board (r, std::vector<char>(c, '+')) {}
+board (r, std::vector<char>(c, '+')) {
+	std::srand(std::time(nullptr)); // Initialise slumpgenerator
+}
 
 
 void Board::printBoard() const {
@@ -22,4 +26,17 @@ void Board::printBoard() const {
 		}
 }
 
-	
+
+
+void Board::placeMines(int numberOfMines) {
+	int placedMines = 0;
+	while (placedMines < numberOfMines) {
+		int x = std::rand() % rows;
+		int y = std::rand() % cols;
+		if (board[x][y] != '*') {
+			board[x][y] = '*';
+
+			placedMines++;
+		}
+	}
+}

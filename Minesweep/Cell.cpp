@@ -10,10 +10,6 @@ bool Cell::isRevealed() const {
 	return revealed; 
 }
 
-bool Cell::isMine() const {
-	return mine;
-}
-
 void Cell::reveal() {
 	revealed = true;
 }
@@ -23,9 +19,9 @@ void Cell::setMine(bool hasMine) {
 }
 // get Display char return a character based on the cell conditions
 char Cell::getDisplayChar() const {
-	if (!isRevealed) {
+	if (!isRevealed()) {
 		return '+';
-	} else if (mine) {
+	} else if (isMine()) {
 		return '*';
 	} else {
 		return ' ';

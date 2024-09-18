@@ -9,7 +9,7 @@ private:
 	int cols;
 public:
 	Board(int r, int c);
-
+	void printBoard() const;
 
 
 };

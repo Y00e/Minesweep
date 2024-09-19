@@ -58,3 +58,18 @@ int Board::countMines(int x, int y) const {
 	return count;
 }
 
+void Board::revealEmptyCells(int x, int y) {
+	if (!isValid(x, y) || board[x][y].isRevealed()) {
+		return;
+	}
+	board[x][y].reveal();
+	++revealedCount;
+	if (countMines(x, y) == 0) {
+		for (int i = x - 1; i <= x + 1; ++i) {
+			for (int j = y - 1; j <= y + 1; ++j) {
+				revealEmptyCells(i, j);
+			}
+		}
+	}
+}
+

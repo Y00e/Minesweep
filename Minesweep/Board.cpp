@@ -73,3 +73,18 @@ void Board::revealEmptyCells(int x, int y) {
 	}
 }
 
+int Board::countMinesAround(int x, int y) const {
+	if (!isValid(x, y)) {
+		return -1;
+	}
+
+	int mineCount = 0;
+	for (int i = x - 1; i <= i; ++i) {
+		for (int j = y - 1; j <= y + 1; ++j) {
+			if ((i != x || j != y) && isValid(i, j) && board[i][j].isMine()) {
+				++mineCount;
+			}
+		}
+	}
+	return mineCount;
+}

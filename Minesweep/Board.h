@@ -16,7 +16,6 @@ public:
 	void placeMines(int numberOfMines);
 	bool isValid(int x, int y) const;
 	int countMines(int x, int y) const;
-	int countMinesAround(int x, int y) const;
 	void revealEmptyCells(int x, int y);
 	bool revealCell(int x, int y);
 	bool isGameWon() const;

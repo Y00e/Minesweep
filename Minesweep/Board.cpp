@@ -6,7 +6,8 @@
 #include "Cell.h"
 
 Board::Board(int r, int c) : rows(r), cols(c),
-board (r, std::vector<Cell>(c)) {
+board (r, std::vector<Cell>(c)),
+revealedCount(0), mineCount(0) {
 	std::srand(std::time(nullptr)); // Initialise slumpgenerator
 }
 
@@ -30,11 +31,12 @@ void Board::printBoard() const {
 
 
 void Board::placeMines(int numberOfMines) {
+	mineCount = numberOfMines;
 	int placedMines = 0;
 	while (placedMines < numberOfMines) {
 		int x = std::rand() % rows;
 		int y = std::rand() % cols;
-		if (board[x][y].isMine()) {
+		if (!board[x][y].isMine()) {
 			board[x][y].setMine(true);
 
 			placedMines++;
@@ -67,24 +69,40 @@ void Board::revealEmptyCells(int x, int y) {
 	if (countMines(x, y) == 0) {
 		for (int i = x - 1; i <= x + 1; ++i) {
 			for (int j = y - 1; j <= y + 1; ++j) {
+				
 				revealEmptyCells(i, j);
 			}
 		}
 	}
 }
 
-int Board::countMinesAround(int x, int y) const {
-	if (!isValid(x, y)) {
-		return -1;
+bool Board::revealCell(int x, int y) {
+	if (!isValid(x, y) || board[x][y].isRevealed()) {
+		return false;
+	}
+	if (board[x][y].isMine()) {
+		board[x][y].reveal();
+		return true;
 	}
 
-	int mineCount = 0;
-	for (int i = x - 1; i <= i; ++i) {
-		for (int j = y - 1; j <= y + 1; ++j) {
-			if ((i != x || j != y) && isValid(i, j) && board[i][j].isMine()) {
-				++mineCount;
+	int adjacentMines = countMines(x, y);
+	board[x][y].setAdjacentMines(adjacentMines);
+	board[x][y].reveal();
+	++revealedCount;
+
+	if (adjacentMines == 0) {
+		for (int i = x - 1; i <= x + 1; ++i) {
+			for (int j = y - 1; j <= y + 1; ++j) {
+				if (isValid(i, j) && !board[i][j].isRevealed()) {
+					revealCell(i, j);  // Recursively reveal adjacent cells
+				}
 			}
 		}
 	}
-	return mineCount;
+
+	return false;
+}
+
+bool Board::isGameWon() const {
+	return revealedCount == rows * cols - mineCount;
 }

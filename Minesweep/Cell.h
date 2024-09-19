@@ -5,6 +5,7 @@ private:
 	bool mine;
 	bool revealed;
 	bool flagged;
+	int adjacentMines;
 public:
 	Cell();
 	bool isRevealed() const;
@@ -13,6 +14,7 @@ public:
 	void setMine(bool hasMine);
 	void setFlag(bool flag);
 	void reveal();
+	void setAdjacentMines(int count);
 	char getDisplayChar() const;
 	
 

@@ -1,5 +1,6 @@
 #include "Game.h"
 #include <iostream>
+#include <limits>
 
 
 Game::Game(int rows, int cols, int mines) : board(rows, cols) {
@@ -14,8 +15,13 @@ void Game::play() {
         
         char rowChar;
         int col;
-        std::cout << "Enter the row and column (e.g., a 3): ";
+        std::cout << "Enter the row and column (ex, a 3): ";
         std::cin >> rowChar >> col;
+
+        if (std::cin.fail()) {
+            std::cin.clear(); // clear the error status
+        }
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         // Adjust for 0-based indexing
         int x = rowChar - 'a';

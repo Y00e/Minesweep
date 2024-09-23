@@ -41,7 +41,7 @@ char Cell::getDisplayChar() const {
 	} else if (adjacentMines > 0) {
 		return '0' + adjacentMines; 
 	} else {
-		return ' ';
+		return '0';
 	}
 }
 

@@ -21,12 +21,12 @@ void Game::play() {
         std::cin >> action >> rowChar >> col;
 
         if (std::cin.fail()) {
-            std::cin.clear(); // clear the error status
+            std::cin.clear(); // clear the error status.
         }
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         // Adjust for 0-based indexing
-        int x = std::toupper(rowChar) - 'A';
+        int x = std::toupper(rowChar) - 'A'; // Convertes rowChar to versal, then subtract ASCII value for 'A'.
 
         int y = col - 1;
 

@@ -17,7 +17,13 @@ void Board::printBoard() const {
 	for (int i = 0; i < cols; ++i) {
 		std::cout << (i + 1) << " "; // i + 1, means that column start with nr 1. 
 	}
+	std::cout << std::endl << "  ";
+
+	for (int i = 0; i < cols; ++i) {
+		std::cout << "==";
+	}
 	std::cout << std::endl;
+	
 	
 	for (int i = 0; i < rows; ++i) {
 		std::cout << " " << static_cast<char>(97 + i) << " "; // static cast char, 97 is the small leter a, so the row is start with a.
@@ -60,21 +66,6 @@ int Board::countMines(int x, int y) const {
 	return count;
 }
 
-void Board::revealEmptyCells(int x, int y) {
-	if (!isValid(x, y) || board[x][y].isRevealed()) {
-		return;
-	}
-	board[x][y].reveal();
-	++revealedCount;
-	if (countMines(x, y) == 0) {
-		for (int i = x - 1; i <= x + 1; ++i) {
-			for (int j = y - 1; j <= y + 1; ++j) {
-				
-				revealEmptyCells(i, j);
-			}
-		}
-	}
-}
 
 bool Board::revealCell(int x, int y) {
 	if (!isValid(x, y) || board[x][y].isRevealed()) {
@@ -101,6 +92,12 @@ bool Board::revealCell(int x, int y) {
 	}
 
 	return false;
+}
+
+void Board::toggleFlag(int x, int y) {
+	if (isValid(x, y) && !board[x][y].isRevealed()) {
+		board[x][y].setFlag(!board[x][y].isFlagged());
+	}
 }
 
 bool Board::isGameWon() const {

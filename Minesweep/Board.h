@@ -14,9 +14,9 @@ public:
 	Board(int r, int c);
 	void printBoard() const;
 	void placeMines(int numberOfMines);
+	void toggleFlag(int x, int y);
 	bool isValid(int x, int y) const;
 	int countMines(int x, int y) const;
-	void revealEmptyCells(int x, int y);
 	bool revealCell(int x, int y);
 	bool isGameWon() const;
 

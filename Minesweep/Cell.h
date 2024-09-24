@@ -16,6 +16,7 @@ public:
 	void reveal();
 	void setAdjacentMines(int count);
 	char getDisplayChar() const;
+	int getAdjacentMines() const;
 	
 
 };

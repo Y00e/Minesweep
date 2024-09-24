@@ -30,6 +30,10 @@ void Cell::setFlag(bool flag) {
 void Cell::setAdjacentMines(int count) {
 	adjacentMines = count;
 }
+
+int Cell::getAdjacentMines() const {
+	return adjacentMines;
+}
 // get Display char return a character based on the cell conditions
 char Cell::getDisplayChar() const {
 	if (flagged) {

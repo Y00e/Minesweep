@@ -101,12 +101,12 @@ void Board::toggleFlag(int x, int y) {
 	}
 }
 
-void Board::saveGame(const std::string& filename) const {
+bool Board::saveGame(const std::string& filename) const {
 	std::ofstream outFile(filename);
 
 	if (!outFile) {
-		std::cerr << " Cannot open file" << filename << std::endl;
-		return;
+		std::cerr << " Cannot open the file" << filename << std::endl;
+		return false;
 	}
 	for (int i = 0; i < rows; ++i) {
 		for (int j = 0; j < cols; ++j) {
@@ -120,13 +120,15 @@ void Board::saveGame(const std::string& filename) const {
 		outFile << '\n';
 	}
 	outFile.close();
+	return true;
 }
 
-void Board::loadGame(const std::string& filename) {
+bool Board::loadGame(const std::string& filename) {
 	std::ifstream inFile(filename);
 
 	if (!inFile) {
 		std::cerr << "Cannot open the file" << filename << std::endl;
+		return false;
 	}
 
 	for (int i = 0; i < rows; ++i) {
@@ -146,6 +148,7 @@ void Board::loadGame(const std::string& filename) {
 	}
 
 	inFile.close();
+	return true;
 }
 
 

@@ -122,7 +122,7 @@ void Board::saveGame(const std::string& filename) const {
 	outFile.close();
 }
 
-void Board::loadGame(const std::string& filename) const {
+void Board::loadGame(const std::string& filename) {
 	std::ifstream inFile(filename);
 
 	if (!inFile) {

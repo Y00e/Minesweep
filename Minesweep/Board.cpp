@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <ctime>
 #include "Cell.h"
+#include <fstream>
 
 Board::Board(int r, int c) : rows(r), cols(c),
 board (r, std::vector<Cell>(c)),
@@ -99,6 +100,55 @@ void Board::toggleFlag(int x, int y) {
 		board[x][y].setFlag(!board[x][y].isFlagged());
 	}
 }
+
+void Board::saveGame(const std::string& filename) const {
+	std::ofstream outFile(filename);
+
+	if (!outFile) {
+		std::cerr << " Cannot open file" << filename << std::endl;
+		return;
+	}
+	for (int i = 0; i < rows; ++i) {
+		for (int j = 0; j < cols; ++j) {
+			const Cell& cell = board[i][j];
+			outFile << cell.isMine() << ' '
+				<< cell.isRevealed() << ' '
+				<< cell.isFlagged() << ' '
+				<< cell.getDisplayChar() << ' '
+				<< cell.getAdjacentMines() << ' ';
+		}
+		outFile << '\n';
+	}
+	outFile.close();
+}
+
+void Board::loadGame(const std::string& filename) const {
+	std::ifstream inFile(filename);
+
+	if (!inFile) {
+		std::cerr << "Cannot open the file" << filename << std::endl;
+	}
+
+	for (int i = 0; i < rows; ++i) {
+		for (int j = 0; j < cols; ++j) {
+			bool isMine, isRevealed, isFlagged;
+			char displayChar;
+			int adjacentMines;
+
+			inFile >> isMine >> isRevealed >> isFlagged
+				>> displayChar >> adjacentMines;
+
+			board[i][j].setMine(isMine);
+			if (isRevealed) board[i][j].reveal();
+			board[i][j].setFlag(isFlagged);
+			board[i][j].setAdjacentMines(adjacentMines);
+		}
+	}
+
+	inFile.close();
+}
+
+
 
 bool Board::isGameWon() const {
 	return revealedCount == rows * cols - mineCount;

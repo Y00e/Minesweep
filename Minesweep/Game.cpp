@@ -3,9 +3,11 @@
 #include <limits>
 
 
+
 Game::Game(int rows, int cols, int mines) : board(rows, cols) {
     board.placeMines(mines);
 }
+
 
 
 
@@ -17,8 +19,42 @@ void Game::play() {
         int col;
         char action;
 
-        std::cout << "Enter action (R for reveal, F for flag), row and column (ex, R a 3): ";
-        std::cin >> action >> rowChar >> col;
+        std::cout << "Enter action (R for reveal, F for flag, S for save, L for load), row and column (ex, R a 3): ";
+        std::cin >> action;
+        action = std::toupper(action);
+
+        if (action == 'S' || action =='L') {
+            
+            if (action == 'S') {
+                std::string filename;
+                std::cout << "Enter filename to save: ";
+                std::cin >> filename;
+                if (board.saveGame(filename)) {
+                    std::cout << "Game saved to " << filename << std::endl;
+                }
+                else {
+                    std::cout << "Failed to save game to " << filename << std::endl;
+                }
+            }
+            else if (action == 'L') {
+                std::string filename;
+                std::cout << "Enter filename to load: ";
+                std::cin >> filename;
+                if (board.loadGame(filename)) {
+                    std::cout << "Game loaded from " << filename << std::endl;
+                }
+                else {
+                    std::cout << "Failed to load game from " << filename << std::endl;
+                }
+            }
+            continue;
+
+            
+        }
+
+      
+
+        std::cin >> rowChar >> col;
 
         if (std::cin.fail()) {
             std::cin.clear(); // clear the error status.
@@ -35,7 +71,6 @@ void Game::play() {
             std::cout << "Invalid move! Try again." << std::endl;
             continue;
         }
-
         
         action = std::toupper(action);
         if (action == 'F') {

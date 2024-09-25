@@ -4,8 +4,14 @@
 
 
 
-Game::Game(int rows, int cols, int mines) : board(rows, cols) {
-    board.placeMines(mines);
+Game::Game(int rows, int cols, int mines) {
+    board = new Board(rows, cols);
+
+    board->placeMines(mines);
+}
+
+Game::~Game() {
+    delete board; // free up the memory
 }
 
 
@@ -13,13 +19,13 @@ Game::Game(int rows, int cols, int mines) : board(rows, cols) {
 
 void Game::play() {
     while (true) {
-        board.printBoard();
+        board->printBoard();
 
         char rowChar;
         int col;
         char action;
 
-        std::cout << "Enter action (R for reveal, F for flag, S for save, L for load), row and column (ex, R a 3): ";
+        std::cout << "Enter action (r for reveal, f for flag) and row and column (ex, ra3) or (S for save, L for load): ";
         std::cin >> action;
         action = std::toupper(action);
 
@@ -29,7 +35,7 @@ void Game::play() {
                 std::string filename;
                 std::cout << "Enter filename to save: ";
                 std::cin >> filename;
-                if (board.saveGame(filename)) {
+                if (board->saveGame(filename)) {
                     std::cout << "Game saved to " << filename << std::endl;
                 }
                 else {
@@ -40,7 +46,7 @@ void Game::play() {
                 std::string filename;
                 std::cout << "Enter filename to load: ";
                 std::cin >> filename;
-                if (board.loadGame(filename)) {
+                if (board->loadGame(filename)) {
                     std::cout << "Game loaded from " << filename << std::endl;
                 }
                 else {
@@ -67,27 +73,27 @@ void Game::play() {
         int y = col - 1;
 
 
-        if (!board.isValid(x, y)) {
+        if (!board->isValid(x, y)) {
             std::cout << "Invalid move! Try again." << std::endl;
             continue;
         }
         
         action = std::toupper(action);
         if (action == 'F') {
-            board.toggleFlag(x, y);
+            board->toggleFlag(x, y);
         }
         else if (action == 'R') {
-            if (board.revealCell(x, y)) {
+            if (board->revealCell(x, y)) {
             std::cout << "Game Over! You stepped on a mine." << std::endl;
-            board.printBoard();
+            board->printBoard();
             return;
         }
         }
        
 
-        if (board.isGameWon()) {
+        if (board->isGameWon()) {
             std::cout << "Congratulations! You won the game." << std::endl;
-            board.printBoard();
+            board->printBoard();
             return;
         }
     }

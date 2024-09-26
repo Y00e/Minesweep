@@ -6,13 +6,15 @@
 #include "Cell.h"
 #include <fstream>
 
+
+// contructor initializes the board with given dimensions.
 Board::Board(int r, int c) : rows(r), cols(c),
 board (r, std::vector<Cell>(c)),
 revealedCount(0), mineCount(0) {
-	std::srand(std::time(nullptr)); // Initialise slumpgenerator
+	std::srand(std::time(nullptr)); // sets up the random number generator
 }
 
-
+// prints out the board using letters for rows and numbers for columns.
 void Board::printBoard() const {
 	std::cout << "   ";
 	for (int i = 0; i < cols; ++i) {
@@ -36,7 +38,7 @@ void Board::printBoard() const {
 }
 
 
-
+// This metod randomly places the number of mines of board. 
 void Board::placeMines(int numberOfMines) {
 	mineCount = numberOfMines;
 	int placedMines = 0;
@@ -51,10 +53,12 @@ void Board::placeMines(int numberOfMines) {
 	}
 }
 
+// controlling the coordinates x, y are inside the playboard.
 bool Board::isValid(int x, int y) const {
-	return (x >= 0 && x < rows && y >= 0 && y < cols); // controlling the coordinates x, y are inside the playboard. 
+	return (x >= 0 && x < rows && y >= 0 && y < cols);  
 }
 
+// count mines that surrounding a given cell, it count 8 cells.
 int Board::countMines(int x, int y) const {
 	int count = 0;
 	for (int i = x - 1; i <= x + 1; ++i) {
@@ -67,7 +71,7 @@ int Board::countMines(int x, int y) const {
 	return count;
 }
 
-
+// it revells a cell, if its mine '*', if its emtyp '0' or if its adjacent Mines it need to be bigger than 0.
 bool Board::revealCell(int x, int y) {
 	if (!isValid(x, y) || board[x][y].isRevealed()) {
 		return false;
@@ -94,13 +98,14 @@ bool Board::revealCell(int x, int y) {
 
 	return false;
 }
-
+// Toggles a flag on a cell if its not revealed.
 void Board::toggleFlag(int x, int y) {
 	if (isValid(x, y) && !board[x][y].isRevealed()) {
 		board[x][y].setFlag(!board[x][y].isFlagged());
 	}
 }
 
+// Handling the saving to a file.
 bool Board::saveGame(const std::string& filename) const {
 	std::ofstream outFile(filename);
 
@@ -111,11 +116,11 @@ bool Board::saveGame(const std::string& filename) const {
 	for (int i = 0; i < rows; ++i) {
 		for (int j = 0; j < cols; ++j) {
 			const Cell& cell = board[i][j];
-			outFile << cell.isMine() << ' '
-				<< cell.isRevealed() << ' '
-				<< cell.isFlagged() << ' '
-				<< cell.getDisplayChar() << ' '
-				<< cell.getAdjacentMines() << ' ';
+			outFile << cell.isMine() << " "
+				<< cell.isRevealed() << " "
+				<< cell.isFlagged() << " "
+				<< cell.getDisplayChar() << " "
+				<< cell.getAdjacentMines() << "\n";
 		}
 		outFile << '\n';
 	}
@@ -123,6 +128,7 @@ bool Board::saveGame(const std::string& filename) const {
 	return true;
 }
 
+// loading a file that was saved.
 bool Board::loadGame(const std::string& filename) {
 	std::ifstream inFile(filename);
 
@@ -134,16 +140,24 @@ bool Board::loadGame(const std::string& filename) {
 	for (int i = 0; i < rows; ++i) {
 		for (int j = 0; j < cols; ++j) {
 			bool isMine, isRevealed, isFlagged;
+			/*bool isMine;*/
 			char displayChar;
 			int adjacentMines;
 
 			inFile >> isMine >> isRevealed >> isFlagged
 				>> displayChar >> adjacentMines;
 
+			/*inFile >> isMine >> displayChar;*/
+
 			board[i][j].setMine(isMine);
 			if (isRevealed) board[i][j].reveal();
 			board[i][j].setFlag(isFlagged);
 			board[i][j].setAdjacentMines(adjacentMines);
+
+			/*board[i][j].setMine(isMine);
+			if (isRevealed) board[i][j].reveal();
+			board[i][j].setFlag(isFlagged);
+			board[i][j].setAdjacentMines(adjacentMines);*/
 		}
 	}
 
@@ -153,6 +167,7 @@ bool Board::loadGame(const std::string& filename) {
 
 
 
+// checks if game is won by comparing the nr of revealed cells with nr of non mine cells.
 bool Board::isGameWon() const {
 	return revealedCount == rows * cols - mineCount;
 }

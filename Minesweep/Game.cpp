@@ -42,6 +42,7 @@ void Game::play() {
                     std::cout << "Failed to save game to " << filename << std::endl;
                 }
             }
+
             else if (action == 'L') {
                 std::string filename;
                 std::cout << "Enter filename to load: ";
@@ -53,12 +54,12 @@ void Game::play() {
                     std::cout << "Failed to load game from " << filename << std::endl;
                 }
             }
+
+            
             continue;
 
             
         }
-
-      
 
         std::cin >> rowChar >> col;
 

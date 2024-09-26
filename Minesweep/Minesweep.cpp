@@ -11,11 +11,12 @@ int main()
 {   
     
     
-    std::cout << "Minesweep Start Game!\n";
+    std::cout << "Welcome to start the minesweep game!\n";
     
     Game game(ROWS, COLS, MINES);
     game.play();
 
     return 0;
 }
+
 

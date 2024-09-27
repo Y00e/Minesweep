@@ -73,23 +73,29 @@ int Board::countMines(int x, int y) const {
 
 // it revells a cell, if its mine '*', if its emtyp '0' or if its adjacent Mines it need to be bigger than 0.
 bool Board::revealCell(int x, int y) {
-	if (!isValid(x, y) || board[x][y].isRevealed()) {
+	if (!isValid(x, y) || board[x][y].getDisplayChar() != '+') {
 		return false;
 	}
 	if (board[x][y].isMine()) {
 		board[x][y].reveal();
+		board[x][y].setDisplayChar('*');
+
 		return true;
 	}
 
 	int adjacentMines = countMines(x, y);
-	board[x][y].setAdjacentMines(adjacentMines);
+	char displayChar = '0' + adjacentMines;
+	board[x][y].setDisplayChar(displayChar);
+	
 	board[x][y].reveal();
 	++revealedCount;
+
+
 
 	if (adjacentMines == 0) {
 		for (int i = x - 1; i <= x + 1; ++i) {
 			for (int j = y - 1; j <= y + 1; ++j) {
-				if (isValid(i, j) && !board[i][j].isRevealed()) {
+				if (isValid(i, j) && board[i][j].getDisplayChar() == '+') {
 					revealCell(i, j);  // Recursively reveal adjacent cells
 				}
 			}
@@ -98,10 +104,11 @@ bool Board::revealCell(int x, int y) {
 
 	return false;
 }
+
 // Toggles a flag on a cell if its not revealed.
 void Board::toggleFlag(int x, int y) {
-	if (isValid(x, y) && !board[x][y].isRevealed()) {
-		board[x][y].setFlag(!board[x][y].isFlagged());
+	if (isValid(x, y) && !board[x][y].getDisplayChar() == '+') {
+		board[x][y].setDisplayChar('F');
 	}
 }
 
@@ -117,10 +124,8 @@ bool Board::saveGame(const std::string& filename) const {
 		for (int j = 0; j < cols; ++j) {
 			const Cell& cell = board[i][j];
 			outFile << cell.isMine() << " "
-				<< cell.isRevealed() << " "
-				<< cell.isFlagged() << " "
 				<< cell.getDisplayChar() << " "
-				<< cell.getAdjacentMines() << "\n";
+				<< "\n";
 		}
 		outFile << '\n';
 	}
@@ -139,25 +144,15 @@ bool Board::loadGame(const std::string& filename) {
 
 	for (int i = 0; i < rows; ++i) {
 		for (int j = 0; j < cols; ++j) {
-			bool isMine, isRevealed, isFlagged;
-			/*bool isMine;*/
+			bool isMine;
 			char displayChar;
-			int adjacentMines;
 
-			inFile >> isMine >> isRevealed >> isFlagged
-				>> displayChar >> adjacentMines;
+			inFile >> isMine >> displayChar;
 
 			/*inFile >> isMine >> displayChar;*/
 
 			board[i][j].setMine(isMine);
-			if (isRevealed) board[i][j].reveal();
-			board[i][j].setFlag(isFlagged);
-			board[i][j].setAdjacentMines(adjacentMines);
-
-			/*board[i][j].setMine(isMine);
-			if (isRevealed) board[i][j].reveal();
-			board[i][j].setFlag(isFlagged);
-			board[i][j].setAdjacentMines(adjacentMines);*/
+			board[i][j].setDisplayChar(displayChar);
 		}
 	}
 
